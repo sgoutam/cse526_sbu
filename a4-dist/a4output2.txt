@@ -1,0 +1,59 @@
+[58] da.api<MainProcess>:INFO: <Node_:f2001> initialized at 127.0.0.1:(UdpTransport=33597, TcpTransport=55899).
+[58] da.api<MainProcess>:INFO: Starting program <module 'a4' from '.\\a4.da'>...
+[60] da.api<MainProcess>:INFO: Running iteration 1 ...
+[65] da.api<MainProcess>:INFO: Waiting for remaining child processes to terminate...(Press "Ctrl-Brk" to force kill)
+board of  1 : {(1, 1): 0, (1, 2): 0, (1, 3): 0, (2, 1): 0, (2, 2): 0, (2, 3): 0, (3, 1): 0, (3, 2): 0, (3, 3): 0}
+_ _ _
+_ _ _
+_ _ _
+board of  2 : {(1, 1): 0, (1, 2): 0, (1, 3): 0, (2, 1): 0, (2, 2): 0, (2, 3): 0, (3, 1): 0, (3, 2): 0, (3, 3): 0}
+_ _ _
+_ _ _
+_ _ _
+---- move by player 1  :  (2, 3)
+[335] da.api<MainProcess>:INFO: Main process terminated.
+board of  2 : {(1, 1): 0, (1, 2): 0, (1, 3): 0, (2, 1): 0, (2, 2): 0, (2, 3): 1, (3, 1): 0, (3, 2): 0, (3, 3): 0}
+_ _ _
+_ _ o
+_ _ _
+---- move by player 2  :  (3, 2)
+board of  1 : {(1, 1): 0, (1, 2): 0, (1, 3): 0, (2, 1): 0, (2, 2): 0, (2, 3): 1, (3, 1): 0, (3, 2): 2, (3, 3): 0}
+_ _ _
+_ _ o
+_ x _
+---- move by player 1  :  (1, 2)
+board of  2 : {(1, 1): 0, (1, 2): 1, (1, 3): 0, (2, 1): 0, (2, 2): 0, (2, 3): 1, (3, 1): 0, (3, 2): 2, (3, 3): 0}
+_ o _
+_ _ o
+_ x _
+---- move by player 2  :  (1, 1)
+board of  1 : {(1, 1): 2, (1, 2): 1, (1, 3): 0, (2, 1): 0, (2, 2): 0, (2, 3): 1, (3, 1): 0, (3, 2): 2, (3, 3): 0}
+x o _
+_ _ o
+_ x _
+---- move by player 1  :  (3, 3)
+board of  2 : {(1, 1): 2, (1, 2): 1, (1, 3): 0, (2, 1): 0, (2, 2): 0, (2, 3): 1, (3, 1): 0, (3, 2): 2, (3, 3): 1}
+x o _
+_ _ o
+_ x o
+---- move by player 2  :  (2, 2)
+board of  1 : {(1, 1): 2, (1, 2): 1, (1, 3): 0, (2, 1): 0, (2, 2): 2, (2, 3): 1, (3, 1): 0, (3, 2): 2, (3, 3): 1}
+x o _
+_ x o
+_ x o
+---- move by player 1  :  (3, 1)
+board of  2 : {(1, 1): 2, (1, 2): 1, (1, 3): 0, (2, 1): 0, (2, 2): 2, (2, 3): 1, (3, 1): 1, (3, 2): 2, (3, 3): 1}
+x o _
+_ x o
+o x o
+---- move by player 2  :  (1, 3)
+board of  1 : {(1, 1): 2, (1, 2): 1, (1, 3): 2, (2, 1): 0, (2, 2): 2, (2, 3): 1, (3, 1): 1, (3, 2): 2, (3, 3): 1}
+x o x
+_ x o
+o x o
+---- move by player 1  :  (2, 1)
+board of  2 : {(1, 1): 2, (1, 2): 1, (1, 3): 2, (2, 1): 1, (2, 2): 2, (2, 3): 1, (3, 1): 1, (3, 2): 2, (3, 3): 1}
+x o x
+o x o
+o x o
+player 2 : It's a draw for us

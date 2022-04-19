@@ -1,0 +1,67 @@
+# place holder for the parts you are to do; may delete after you finish all
+def TODO(hint = ''): return False
+
+import random
+
+class BoardAI:
+  def __init__(self, n):
+    """create an empty n-by-n board, with indices starting at 1
+    """
+    self.board = {(i,j):0 for i in range(1,n+1) for j in range(1,n+1)}
+
+  def move(self, id):
+    """find next position for player id, update board, and return the position
+    """
+    pos = random.choice([(i,j) for (i,j) in self.board if self.board[i,j]==0])
+    self.update(pos, id)
+    print('---- move by player', id, ' : ', pos)
+    return pos
+
+  def update(self, pos, id):
+    """update board to reflect that position pos is taken by player id
+    """
+    self.board[pos] = id
+
+  def win(self, id):
+    """print result if player id has won, and return whether id has won
+    """
+    if TODO('row i are all occupid by player id'):
+      print('==== player', id, 'won: row', i); return True
+    if TODO('column j are all occupid by player id'):
+      print('==== player', id, 'won: column', j); return True
+    if TODO('left diagonal are all occupid by player id'):
+      print('==== player', id, 'won: left diagonal'); return True
+    if TODO('right diagonal are all occupid by player id'):
+      print('==== player', id, 'won: right diagonal'); return True
+    return False
+
+  def finished(self):
+    """return if some player has won, or if the board is full so it is a draw
+    """
+    return TODO('if some player has won, or if the board is full')
+
+  def show(self, id):
+    """show the board of player id; id is not needed for the show (line 4);
+       it is used for printing with board atomically (line 2)
+    """
+    board = self.board;  Is = {i for (i,_) in board}
+    print('board of ', id, ':',  board)
+    marks = {0: '_', 1: 'o', 2: 'x'}
+    print('\n'.join(' '.join(marks[board[i,j]] for j in Is) for i in Is)) 
+
+class Player (process):
+  def setup(board, id, ps):        # take board size, own id, other processes
+    board.show(id)
+
+  def run():
+    TODO('player 1 should start; play until finished')
+
+  def receive(msg= (pos, id2)):    # receive next position from player id2
+    TODO('take action seeing a move by player id2')
+
+def main():
+  n = 3                            # size n for n-by-n board
+  board = BoardAI(n)
+
+  num_players = 2
+  TODO('create, setup, and start both players, with ids 1 and 2, respetively')

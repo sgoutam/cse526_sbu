@@ -1,0 +1,49 @@
+vocabulary V {
+        type index isa int
+        queen(index, index)
+        n : index
+        type diag isa int
+        diag1(index, index) : diag
+        diag2(index, index) : diag
+}
+
+structure S : V {
+        index = {1..20}
+        diag = {1..39}
+        n = 20
+}
+
+theory T : V {
+        { diag1(x, y) = x - y + n. }
+        { diag2(x, y) = x + y - 1. }
+        !x[index] : ?=1y[index] : queen(x, y).                  //(1)
+        !y : ?=1x : queen(x, y).                                //(2)
+        !d : #{x y : queen(x, y) & diag1(x, y) = d} < 2.        //(3)
+        !d : #{x y : queen(x, y) & diag2(x, y) = d} < 2.        //(4)
+    	!x1: !y1: !x2: !y2 : (queen(x1,y1) & queen(x2,y2) => x1=x2 | y1=y2 | (abs(x2-x1) + abs(y2-y1)) >= 5). 
+}
+
+procedure main() {
+        /*  Important: the option xsb is not present in every installation, in order to obtain 
+         *  efficient definition evaluation with XSB, you should compile IDP yourself
+         *  (as XSB cannot be distributed with dynamically linked binaries
+         */
+        stdoptions.xsb=true                    // use XSB to calculate definitions that can be
+                                               // calculated in advance
+        diags = calculatedefinitions(T,S)      // calculate the definitions for symbols diag1 and diag2
+                                               // The resulting variable (diags) contains a single structure
+                                               // in which the defined symbols are two-valued
+        print("Definitions calculated:\n"..tostring(diags))
+
+        stdoptions.nbmodels=0                  // search for all models
+        solutions = modelexpand(T,diags)       // solutions is now a (Lua) table with all models
+                                               // Note that instead of diags, we could also do modelexpand on S,
+                                               // since the standard modelexpand workflow contains a call to
+                                               // calculatedefinitions
+        print(#solutions.." models found")     // "#" retrieves table size, .. is the lua concatenation
+        for i,sol in ipairs(solutions) do      // A for-loop to iterate over all solutions.
+                print("model "..i..":")        // ipairs is a builtin Lua procedure which allows you
+                                               // to loop over the index and table elements of a table
+                print(sol)
+        end
+}

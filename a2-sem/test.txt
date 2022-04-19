@@ -1,0 +1,31 @@
+{
+    data = [ 100,  9000, 500, 6000 ];
+
+    result = [ 0, 0, 0, 0 ];
+
+    i = 0;
+
+    while ( i < 4 ) {
+        a = data[i];
+        b = data[i];
+
+        if (a > 0) {
+            while (b > 0) {
+                if (a > b) {
+                    a = a - b;
+                }
+                if (not (a > b)) {
+                    b = b - a;
+                }
+            }
+        }
+
+        result[i] = a;
+        i = i + 1;
+    }
+
+    print result[1];
+
+}
+    
+    

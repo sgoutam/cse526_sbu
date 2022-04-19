@@ -1,0 +1,32 @@
+import a3sets
+from a3sets import succ_map, reach_read
+
+def reach_iter(e,s):
+  return {}
+
+def reach_inc_chain(e,s):
+  return {}
+
+def reach_inc_direct(e,s):
+  return {}
+
+def reach_test():
+  e,s = reach_read()
+  vertices = setof(x, (x,_) in e) | setof(y, (_,y) in e)  # da queries
+  print(len(e), len(s), len(vertices))
+
+  rs = a3sets.reach_iter(e,s)  # use the version in Python
+  print(rs, len(rs))
+
+  rs1 = reach_iter(e,s)
+  print(rs1 == rs)
+
+  e2 = succ_map(e)
+
+  rs2 = reach_inc_chain(e2,s)
+  print(rs2 == rs)
+
+  rs3 = reach_inc_direct(e2,s)
+  print(rs3 == rs)
+
+reach_test()

@@ -1,0 +1,8 @@
+{
+    a = 10;
+    # test a procedure definition and a procedure call
+    def p(x1,x2,x3,x4)
+    	print [x1,x2,x3,x4];
+    
+    p(1,2,3,4);
+}
