@@ -8,6 +8,7 @@ class BoardAI:
     """create an empty n-by-n board, with indices starting at 1
     """
     self.board = {(i,j):0 for i in range(1,n+1) for j in range(1,n+1)}
+    self.n = n
 
   def move(self, id):
     """find next position for player id, update board, and return the position
@@ -24,7 +25,6 @@ class BoardAI:
 
   def win(self, id):
     """print result if player id has won, and return whether id has won
-    """
     if TODO('row i are all occupid by player id'):
       print('==== player', id, 'won: row', i); return True
     if TODO('column j are all occupid by player id'):
@@ -34,11 +34,35 @@ class BoardAI:
     if TODO('right diagonal are all occupid by player id'):
       print('==== player', id, 'won: right diagonal'); return True
     return False
+    """
+
+    # check row sum == n, for all i's sum of j's
+    if (some(i in range(1, self.n+1), has=(sum([1 for j in range(1, self.n+1) \
+                if self.board[(i,j)] == id ]) == self.n))):
+      print('==== player', id, 'won: row', i); return True
+
+    # check if column sum == n, for all j's sum of i's
+    if (some(j in range(1, self.n+1), has=(sum([1 for i in range(1, self.n+1) \
+                if self.board[(i,j)] == id]) == self.n))):
+      print('==== player', id, 'won: column', j); return True
+
+    # check if left diagonal. i == j values
+    if (sum(1 for i in range(1, self.n+1) if self.board[(i,i)] == id) == self.n):
+      print('==== player', id, 'won: left diagonal'); return True
+    
+    # check if right diagonal, i, n-i values
+    if (sum(1 for i in range(1, self.n+1) if self.board[(i, self.n-i+1)] == id) == self.n):
+      print('==== player', id, 'won: right diagonal'); return True
+      
+    # default
+    return False
 
   def finished(self):
     """return if some player has won, or if the board is full so it is a draw
     """
-    return TODO('if some player has won, or if the board is full')
+    players = set(self.board.values())
+    if DEBUG:
+      print(players)
 
   def show(self, id):
     """show the board of player id; id is not needed for the show (line 4);
@@ -55,9 +79,27 @@ class Player (process):
 
   def run():
     TODO('player 1 should start; play until finished')
+    if id == 1:
+      my_pos = board.move(id)
+      send((my_pos, id), to=ps)
+
+    # other player sends "Done" to indicate their move is complete
+    await(received(("Done",)))
+
 
   def receive(msg= (pos, id2)):    # receive next position from player id2
     TODO('take action seeing a move by player id2')
+
+    # update players board with id2's move
+    board.update(pos, id2)
+
+    
+
+
+
+
+
+
 
 def main():
   n = 3                            # size n for n-by-n board
@@ -65,3 +107,12 @@ def main():
 
   num_players = 2
   TODO('create, setup, and start both players, with ids 1 and 2, respetively')
+
+  player1 = new(Player)
+  player2 = new(Player)
+
+  setup(player1, (board, 1, player2))
+  setup(player2, (board, 2, player1))
+  start(player1)
+  start(player2)
+
