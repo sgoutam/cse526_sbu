@@ -57,12 +57,33 @@ class BoardAI:
     # default
     return False
 
-  def finished(self):
+  def finished(self, debug=False):
     """return if some player has won, or if the board is full so it is a draw
     """
-    players = set(self.board.values())
-    if DEBUG:
-      print(players)
+
+    # get all ids placed on the board {0,1,2}
+    board_items = set(self.board.values())
+    if debug:
+      self.show(id)
+
+    if 0 in board_items:
+      # some spaces are still empty
+      return (False,0)
+    
+    for item in board_items:
+      if (item != 0):
+        if self.win(item) is True:
+          return (True,1)
+
+    if 0 not in board_items:
+      # if it reaches here, no one has won and no spaces are left
+      if debug:
+        print("All spaces are filled. It's a draw!")
+      return (True,0)
+
+    return (False,0)
+    
+
 
   def show(self, id):
     """show the board of player id; id is not needed for the show (line 4);
@@ -74,17 +95,23 @@ class BoardAI:
     print('\n'.join(' '.join(marks[board[i,j]] for j in Is) for i in Is)) 
 
 class Player (process):
+
   def setup(board, id, ps):        # take board size, own id, other processes
     board.show(id)
 
   def run():
     TODO('player 1 should start; play until finished')
     if id == 1:
+      # player just starts the game here and then all other moves
+      # are done using receive
       my_pos = board.move(id)
       send((my_pos, id), to=ps)
-
+    
     # other player sends "Done" to indicate their move is complete
     await(received(("Done",)))
+
+    # Two way handshake to confirm termination
+    send(("Done",), to=ps)
 
 
   def receive(msg= (pos, id2)):    # receive next position from player id2
@@ -92,13 +119,22 @@ class Player (process):
 
     # update players board with id2's move
     board.update(pos, id2)
+    board.show(id)
 
-    
+    board_win = board.finished()
 
-
-
-
-
+    if board_win[0] == False:
+      # empty slots 
+      my_move = board.move(id)
+      send((my_move, id), to=ps)
+    else:
+      # either draw or someone won
+      if board_win[1] == 0:
+        print(f"player {id} : it's a draw!")
+        send(("Done",), to=ps)
+      if board_win[1] == 1:
+        print(f"player {id} : Congratulations to player {id2}")
+        send(("Done",), to=ps)
 
 
 def main():
@@ -108,11 +144,13 @@ def main():
   num_players = 2
   TODO('create, setup, and start both players, with ids 1 and 2, respetively')
 
-  player1 = new(Player)
-  player2 = new(Player)
+  players = list( new(Player, num = num_players))
 
-  setup(player1, (board, 1, player2))
-  setup(player2, (board, 2, player1))
-  start(player1)
-  start(player2)
+  # player1 = new(Player)
+  # player2 = new(Player)
+
+  setup(players[0], (board, int(1), players[1]))
+  setup(players[1], (board, int(2), players[0]))
+  start(players[0])
+  start(players[1])
 
