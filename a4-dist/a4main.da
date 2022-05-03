@@ -107,7 +107,7 @@ class Player (process):
       my_pos = board.move(id)
       send((my_pos, id), to=ps)
     
-    # other player sends "Done" to indicate their move is complete
+    # other player sends "Done" to indicate their board is complete
     await(received(("Done",)))
 
     # Two way handshake to confirm termination
@@ -119,21 +119,25 @@ class Player (process):
 
     # update players board with id2's move
     board.update(pos, id2)
+    my_id = id
     board.show(id)
 
     board_win = board.finished()
-
+    # print(board_win)
     if board_win[0] == False:
       # empty slots 
-      my_move = board.move(id)
-      send((my_move, id), to=ps)
+      my_move = board.move(my_id)
+      send((my_move, my_id), to=ps)
     else:
       # either draw or someone won
       if board_win[1] == 0:
-        print(f"player {id} : it's a draw!")
+        print(f"player {my_id} : it's a draw!")
         send(("Done",), to=ps)
-      if board_win[1] == 1:
-        print(f"player {id} : Congratulations to player {id2}")
+      elif board_win[1] == 1:
+        if id2 != my_id:
+          print(f"player {my_id} : Congratulations to {id2}")
+        else:
+          print(f"player {my_id} : I win!")
         send(("Done",), to=ps)
 
 

@@ -1,0 +1,177 @@
+# place holder for the parts you are to do; may delete after you finish all
+def TODO(hint = ''): return False
+
+import random
+
+class BoardAI:
+  def __init__(self, m, n, k):
+    """create an empty n-by-n board, with indices starting at 1
+    """
+    self.board = {(i,j):0 for i in range(1,n+1) for j in range(1,n+1)}
+    self.m = m
+    self.n = n
+    self.k = k
+
+  def move(self, id):
+    """find next position for player id, update board, and return the position
+    """
+    pos = random.choice([(i,j) for (i,j) in self.board if self.board[i,j]==0])
+    self.update(pos, id)
+    print('---- move by player', id, ' : ', pos)
+    return pos
+
+  def update(self, pos, id):
+    """update board to reflect that position pos is taken by player id
+    """
+    self.board[pos] = id
+
+  def win(self, id):
+    """print result if player id has won, and return whether id has won
+    if TODO('row i are all occupid by player id'):
+      print('==== player', id, 'won: row', i); return True
+    if TODO('column j are all occupid by player id'):
+      print('==== player', id, 'won: column', j); return True
+    if TODO('left diagonal are all occupid by player id'):
+      print('==== player', id, 'won: left diagonal'); return True
+    if TODO('right diagonal are all occupid by player id'):
+      print('==== player', id, 'won: right diagonal'); return True
+    return False
+    """
+
+    # check row sum == n, for all i's sum of j's
+    if (some(i in range(1, self.n+1), has=(sum([1 for j in range(1, self.n+1) \
+                if self.board[(i,j)] == id ]) == self.k))):
+      print('==== player', id, 'won: row', i); return True
+
+    # check if column sum == n, for all j's sum of i's
+    if (some(j in range(1, self.n+1), has=(sum([1 for i in range(1, self.n+1) \
+                if self.board[(i,j)] == id]) == self.k))):
+      print('==== player', id, 'won: column', j); return True
+
+    # check if left diagonal. i == j values
+    if (sum(1 for i in range(1, self.n+1) if self.board[(i,i)] == id) == self.k):
+      print('==== player', id, 'won: left diagonal'); return True
+    
+    # check if right diagonal, i, n-i values
+    if (sum(1 for i in range(1, self.n+1) if self.board[(i, self.n-i+1)] == id) == self.k):
+      print('==== player', id, 'won: right diagonal'); return True
+      
+    # default
+    return False
+
+
+  def finished(self, debug=False):
+    """return if some player has won, or if the board is full so it is a draw
+    """
+
+    # get all ids placed on the board {0,1,2,...p} for p players
+    board_items = set(self.board.values())
+    if debug:
+      self.show(id)
+
+    if 0 in board_items:
+      # some spaces are still empty
+      return (False,0)
+    
+    for item in board_items:
+      if (item != 0):
+        if self.win(item) is True:
+          return (True,1)
+
+    if 0 not in board_items:
+      # if it reaches here, no one has won and no spaces are left
+      if debug:
+        print("All spaces are filled. It's a draw!")
+      return (True,0)
+
+    return (False,0)
+    
+
+
+  def show(self, id):
+    """show the board of player id; id is not needed for the show (line 4);
+       it is used for printing with board atomically (line 2)
+    """
+    board = self.board;  Is = {i for (i,_) in board}
+    print('board of ', id, ':',  board)
+    marks = {0: '_', 1: '!', 2: '@', 3: '#', 4: '$', 5: '%', 6: '^', 7: '&', 8: '*'}
+    print('\n'.join(' '.join(marks[board[i,j]] for j in Is) for i in Is)) 
+
+class Player (process):
+
+  def setup(board, id, ps):        # take board size, own id, other processes
+    board.show(id)
+
+  def run():
+    TODO('player 1 should start; play until finished')
+    if id == 1:
+      # player just starts the game here and then all other moves
+      # are done using receive
+      my_pos = board.move(id)
+      moves = [(my_pos, id)]
+      send((moves, ), to=ps)
+    
+    # other player sends "Done" to indicate their board is complete
+    await(received(("Done",)))
+
+    # Two way handshake to confirm termination
+    send(("Done",), to=[ps])
+
+
+  def receive(msg= (moves, )):    # receive next position from player id2
+    TODO('take action seeing a move by player id2')
+
+    if moves == "Done":
+      return
+
+    # update players board with ALL moves
+    for pos, player_id in moves:
+      board.update(pos, player_id)
+    
+    board.show(id)
+
+    board_win = board.finished()
+
+    if board_win[0] == False:
+      # empty slots 
+      my_move = board.move(id)
+      moves.append((my_move, id))
+      send((moves, ), to=ps)
+    else:
+      # either draw or someone won
+      if board_win[1] == 0:
+        print(f"player {id} : it's a draw!")
+        send(("Done",), to=[ps, self])
+      if board_win[1] == 1:
+        p_ids = {p_id for _, p_id in moves if p_id != id}
+        for p in p_ids:
+          print(f"player {p} : Congratulations to player {id}")
+        send(("Done",), to=[ps, self])
+
+
+def main():
+  m = 5
+  n = 6                            # for m-by-n board
+  k = 4
+  board = BoardAI(m, n, k)
+
+  num_players = 3
+  if not ( 3 <= num_players <= 8):
+    print("num_players should be >=3 and <= 8")
+    exit() 
+  TODO('create, setup, and start both players, with ids 1 and 2, respetively')
+
+  players = list( new(Player, num = num_players))
+
+  # player1 = new(Player)
+  # player2 = new(Player)
+
+  # setup(players[0], (board, int(1), players[1]))
+  # setup(players[1], (board, int(2), players[0]))
+  # start(players[0])
+  # start(players[1])
+
+  for pid in range(num_players):
+    setup({players[pid]}, (board, pid+1, players[(pid+1)%num_players]))
+  
+  start(players)
